@@ -26,7 +26,7 @@ List<String> _noticeProblems(Map<String, Map<String, String>> catalogs) {
 
 void main() {
   test('one complete language record owns every voice locale', () {
-    expect(voiceLanguages.keys, unorderedEquals(['es', 'en', 'pt', 'de', 'fr', 'it', 'ja', 'ko', 'zh']));
+    expect(voiceLanguages.keys, unorderedEquals(['es', 'en', 'pt', 'de', 'fr', 'it', 'ja', 'ko', 'zh', 'ru']));
     for (final entry in voiceLanguages.entries) {
       final language = entry.value;
       expect(language.code, entry.key);
@@ -54,6 +54,18 @@ void main() {
     expect(voiceLanguageFor('pt_BR').code, 'pt');
     expect(voiceLanguageFor('zh-Hant-TW').code, 'zh');
     expect(voiceLanguageFor('unknown').code, 'en');
+    expect(voiceLanguageFor('ru-RU').whisperLanguage, 'ru');
+    expect(voiceLanguageFor('ru').systemSttLocales, contains('ru_RU'));
+    expect(voiceLanguageFor('ru').normalizeCommand('Привет, мир!'), 'привет мир');
+  });
+  test('Russian speech uses Russian locale and recognises local controls', () {
+    final ru = voiceLanguageFor('ru-RU');
+    expect(ru.whisperLanguage, 'ru');
+    expect(ru.deviceTtsFallback, 'ru-RU');
+    expect(ru.semanticCommand('Пожалуйста, перестань говорить'), LocalVoiceCommand.silenceCurrent);
+    expect(ru.semanticCommand('Сделай паузу'), LocalVoiceCommand.pause);
+    expect(ru.semanticCommand('Как закончить разговор?'), isNull);
+    expect(VoiceResponsePolicy.isLikelySttHallucination('Проверь расписание на завтра'), isFalse);
   });
   test('Portuguese spoken copy and grammar retain the existing output', () {
     final language = voiceLanguageFor('pt');

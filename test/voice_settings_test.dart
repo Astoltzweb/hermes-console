@@ -7,6 +7,14 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('VoiceSettings', () {
+    test('Russian defaults to Hermes transcription and preserves explicit choice', () async {
+      SharedPreferences.setMockInitialValues({'app_locale': 'ru'});
+      final prefs = await SharedPreferences.getInstance();
+      expect(VoiceSettings.load(prefs).sttEngine, SttEngineKind.hermesServer);
+      await prefs.setString('voice_stt_engine', 'system');
+      expect(VoiceSettings.load(prefs).sttEngine, SttEngineKind.system);
+    });
+
     test('sin preferencias guardadas usa los motores públicos', () async {
       SharedPreferences.setMockInitialValues({});
       final prefs = await SharedPreferences.getInstance();

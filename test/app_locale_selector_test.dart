@@ -21,6 +21,7 @@ void main() {
       'ja': '日本語',
       'it': 'Italiano',
       'ko': '한국어',
+      'ru': 'Русский',
     };
     expect(AppLocales.all.map((option) => option.id).toSet(), {
       'system',
@@ -39,7 +40,7 @@ void main() {
   });
 
   test('unsupported saved choices use the system option', () {
-    expect(AppLocales.byId('ru').id, 'system');
+    expect(AppLocales.byId('unknown').id, 'system');
     expect(AppLocales.byId(null).locale, isNull);
   });
 
@@ -76,7 +77,7 @@ void main() {
     expect(AppLocales.resolve(null, Strings.supportedLocales), const Locale('en'));
     expect(
       AppLocales.resolve(const Locale('ru'), Strings.supportedLocales),
-      const Locale('en'),
+      const Locale('ru'),
     );
   });
 

@@ -10,6 +10,7 @@ part 'langs/it.dart';
 part 'langs/ja.dart';
 part 'langs/ko.dart';
 part 'langs/zh.dart';
+part 'langs/ru.dart';
 
 /// Local controls never become chat prompts or require a server.
 enum LocalVoiceCommand { silenceCurrent, pause, end }
@@ -65,6 +66,7 @@ const voiceLanguages = <String, VoiceLanguage>{
   'ja': _JaVoiceLanguage(),
   'ko': _KoVoiceLanguage(),
   'zh': _ZhVoiceLanguage(),
+  'ru': _RuVoiceLanguage(),
 };
 
 String voiceLanguageCode(String value) =>

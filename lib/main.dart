@@ -551,6 +551,7 @@ class AppLocales {
     AppLocaleOption('ja', '日本語', Locale('ja')),
     AppLocaleOption('it', 'Italiano', Locale('it')),
     AppLocaleOption('ko', '한국어', Locale('ko')),
+    AppLocaleOption('ru', 'Русский', Locale('ru')),
   ];
 
   static AppLocaleOption byId(String? id) =>

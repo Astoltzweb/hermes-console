@@ -500,7 +500,9 @@ class VoiceSettings {
             ? legacyStreamModel ?? 'tts-1'
             : 'tts-1');
     return VoiceSettings(
-      sttEngine: SttEngineKind.from(prefs.getString(_kStt)),
+      sttEngine: prefs.getString(_kStt) == null && lang == 'ru'
+          ? SttEngineKind.hermesServer
+          : SttEngineKind.from(prefs.getString(_kStt)),
       ttsEngine: storedTtsEngine == null && voiceLanguageFor(lang).neuralVoiceId == null
           ? TtsEngineKind.device
           : migratedTtsEngine,

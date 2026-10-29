@@ -172,6 +172,7 @@ const List<String> kServerTranscriptionLanguages = [
   'de',
   'pt',
   'it',
+  'ru',
 ];
 
 /// Longest recording, in seconds, offered for one voice turn.

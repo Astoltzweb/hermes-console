@@ -72,6 +72,10 @@ android {
    }
 
    buildTypes {
+       // Local personal build installs beside the store version.
+       debug {
+           applicationIdSuffix = ".personal"
+       }
        release {
            // La validación de tareas al final del archivo impide empaquetar una
            // variante release sin la upload key. Nunca se degrada a firma debug.
