@@ -998,7 +998,10 @@ class _VoiceSettingsScreenState extends State<VoiceSettingsScreen>
       await _selectEngine(stt: _lastPhoneDictation);
       return;
     }
-    if (_s.sttEngine == SttEngineKind.hermesServer) return;
+    if (_s.sttEngine == SttEngineKind.hermesServer &&
+        _nativeVoiceConsent == NativeVoiceConsent.accepted) {
+      return;
+    }
     final identity = _nativeVoiceIdentity;
     final dashboard = _nativeVoiceDashboard;
     final app = context.findAncestorStateOfType<HermesAppState>();

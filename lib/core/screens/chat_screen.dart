@@ -16423,10 +16423,38 @@ class _ChatScreenState extends State<ChatScreen>
       await voice.stopDictation();
     }
     if (voice.settings.sttEngine == SttEngineKind.hermesServer) {
+      final prefs = await SharedPreferences.getInstance();
+      final profile = _effectiveSessionProfile;
+      final connection = widget.connection;
+      final dashboard = DashboardClient.lazy(connection);
+      final identity = nativeVoicePreferenceIdentity(dashboard.baseUrl, profile: profile);
+      dashboard.close();
+      final consent = NativeVoiceConsentStore(prefs);
+      if (consent.read(identity) != NativeVoiceConsent.accepted) {
+        if (!mounted) return;
+        final strings = Strings.of(context);
+        final accepted = await showHermesDialogRoute<bool>(
+          context: context,
+          builder: (dialogContext) => AlertDialog(
+            title: Text(strings.serverDictationConsentTitle),
+            content: Text(strings.serverDictationConsentBody),
+            actions: [
+              TextButton(onPressed: () => Navigator.of(dialogContext).pop(false), child: Text(strings.chaCancel)),
+              FilledButton(onPressed: () => Navigator.of(dialogContext).pop(true), child: Text(strings.chaActivate)),
+            ],
+          ),
+        );
+        if (accepted != true || !mounted || _disposed ||
+            !identical(widget.connection, connection) || _effectiveSessionProfile != profile ||
+            voice.settings.sttEngine != SttEngineKind.hermesServer) {
+          return;
+        }
+        await consent.write(identity, NativeVoiceConsent.accepted);
+        if (!mounted || _disposed) return;
+      }
       final preparation = voice.beginHermesServerDictationPreparation(
         owner: this,
       );
-      final prefs = await SharedPreferences.getInstance();
       final configuration = await configureHermesServerDictation(
         voice: voice,
         owner: this,
@@ -16743,7 +16771,9 @@ class _ChatScreenState extends State<ChatScreen>
       ),
       SttStatus.needsServerConfig => (
         str.chaVoiceNeedsServerTitle,
-        str.chaVoiceNeedsServerBody,
+        check.engine == SttEngineKind.hermesServer
+            ? str.serverDictationUnavailableBody
+            : str.chaVoiceNeedsServerBody,
         str.chaVoiceSettingsCta,
       ),
       // A-013 (spec 028): con el permiso denegado, mandar a Ajustes › Voz era

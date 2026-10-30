@@ -9204,5 +9204,8 @@
         "type": "String"
       }
     }
-  }
+  },
+  "serverDictationConsentTitle": "Server voice recognition",
+  "serverDictationConsentBody": "Your recorded voice will be sent to the Hermes server connected to this chat for transcription.",
+  "serverDictationUnavailableBody": "Could not reach speech recognition on the Hermes server connected to this chat. Check the connection and server voice settings."
 }

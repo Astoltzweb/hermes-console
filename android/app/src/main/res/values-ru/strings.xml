@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="voice_notification_title">Голос Hermes</string>
+    <string name="voice_notification_active">Слушаю</string>
+    <string name="voice_notification_paused">Пауза</string>
+    <string name="voice_notification_mic_active">Микрофон включён</string>
+    <string name="voice_notification_mic_paused">Микрофон приостановлен</string>
+    <string name="voice_notification_orb">Состояние голосового режима Hermes</string>
+    <string name="voice_notification_duration">Длительность разговора</string>
+    <string name="voice_notification_open_hint">Нажмите, чтобы открыть Hermes</string>
+    <string name="voice_notification_primary_action">Пауза</string>
+    <string name="voice_notification_end_action">Завершить разговор</string>
+    <string name="external_data_sync_channel">Защищённая передача</string>
+    <string name="external_data_sync_active">Передача данных или терминал активны</string>
+    <string name="external_data_sync_stop">Остановить</string>
+    <string name="rich_channel_conversations">Боты и комнаты</string>
+    <string name="rich_channel_conversations_desc">Сообщения, упоминания и итоги обсуждений ботов</string>
+    <string name="rich_channel_live">Ход работы</string>
+    <string name="rich_channel_live_desc">Ход работы ботов и комнат</string>
+    <string name="rich_channel_approvals">Подтверждения</string>
+    <string name="rich_brand">Hermes</string>
+    <string name="rich_you">Вы</string>
+    <string name="rich_thinking">Думаю…</string>
+    <string name="rich_done">Готово</string>
+    <string name="rich_sending">Отправка…</string>
+    <string name="rich_unlock_to_answer">Разблокируйте приложение, чтобы ответить</string>
+    <string name="rich_reply_failed">Не удалось отправить · откройте приложение, чтобы повторить</string>
+    <string name="rich_action_failed">Не удалось отправить · откройте Hermes</string>
+    <plurals name="rich_quiet_more">
+        <item quantity="one">Ещё %d</item>
+        <item quantity="few">Ещё %d</item>
+        <item quantity="many">Ещё %d</item>
+        <item quantity="other">Ещё %d</item>
+    </plurals>
+    <plurals name="rich_auto_summary">
+        <item quantity="one">%d автоматизация</item>
+        <item quantity="few">%d автоматизации</item>
+        <item quantity="many">%d автоматизаций</item>
+        <item quantity="other">%d автоматизации</item>
+    </plurals>
+</resources>
