@@ -6,6 +6,7 @@ void main() {
   const pairs = <String, String>{
     "es": "A y B",
     "en": "A and B",
+    "ru": "A и B",
     "pt": "A e B",
     "de": "A und B",
     "fr": "A et B",
@@ -17,6 +18,7 @@ void main() {
   const heads = <String, String>{
     "es": "A, B",
     "en": "A, B",
+    "ru": "A, B",
     "pt": "A, B",
     "de": "A, B",
     "fr": "A, B",
@@ -25,7 +27,7 @@ void main() {
     "ko": "A · B",
     "zh": "A、B",
   };
-  for (final lang in ['es', 'en', 'pt', 'de', 'fr', 'it', 'ja', 'ko', 'zh']) {
+  for (final lang in ['es', 'en', 'pt', 'de', 'fr', 'it', 'ja', 'ko', 'zh', 'ru']) {
     test('$lang owns pair and list punctuation templates', () {
       final copy = NotifL10n(lang);
       expect(notificationCatalogs[lang]!['joinNamesPair'], isNotNull);

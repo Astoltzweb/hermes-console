@@ -12,7 +12,7 @@ void main() {
 
   test('nine notification catalogs have exact keys and placeholders', () {
     expect(notificationCatalogs.keys.toSet(),
-        {'es', 'en', 'pt', 'de', 'fr', 'it', 'ja', 'ko', 'zh'});
+        {'es', 'en', 'pt', 'de', 'fr', 'it', 'ja', 'ko', 'zh', 'ru'});
     final english = notificationCatalogs['en']!;
     expect(english, isNotEmpty);
     for (final catalog in notificationCatalogs.entries) {
@@ -29,7 +29,7 @@ void main() {
 
   test('explicit preference wins, unknown preference falls back to English', () async {
     for (final entry in {'es': 'es', 'de': 'de', 'pt_PT': 'pt',
-      'zh-Hant-TW': 'zh', 'unknown': 'en'}.entries) {
+      'zh-Hant-TW': 'zh', 'ru_RU': 'ru', 'unknown': 'en'}.entries) {
       SharedPreferences.setMockInitialValues({'app_locale': entry.key});
       final prefs = await SharedPreferences.getInstance();
       expect(NotifL10n.of(prefs, deviceLocale: const Locale('fr')).lang,

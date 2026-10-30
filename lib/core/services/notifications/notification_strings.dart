@@ -12,6 +12,7 @@ import 'strings/notif_it.dart';
 import 'strings/notif_ja.dart';
 import 'strings/notif_ko.dart';
 import 'strings/notif_zh.dart';
+import 'strings/notif_ru.dart';
 
 const Map<String, Map<String, String>> notificationCatalogs = {
   'es': notifEs,
@@ -23,6 +24,7 @@ const Map<String, Map<String, String>> notificationCatalogs = {
   'ja': notifJa,
   'ko': notifKo,
   'zh': notifZh,
+  'ru': notifRu,
 };
 
 /// Shared language resolution for background copy and context-free callers.
@@ -59,6 +61,7 @@ class NotifL10n {
           : language == 'it' ? 'it'
           : language == 'ja' ? 'ja'
           : language == 'ko' ? 'ko'
+          : language == 'ru' ? 'ru'
           : language == 'zh' ? 'zh'
           : 'en';
 
