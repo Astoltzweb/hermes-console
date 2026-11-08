@@ -201,6 +201,46 @@ void main() {
     );
     expect(pool.leaseCount, 1);
   });
+
+  test('foreground wake clears stale backoff once per holdoff window', () {
+    fakeAsync((async) {
+      final pool = SharedGatewayPool.forTesting(
+        factory: (connection) => TuiGatewayClient(
+          connection,
+          dashboard: _Ticket(() => false),
+          heartbeatInterval: Duration.zero,
+          now: () => DateTime(2026).add(async.elapsed),
+          reconnectBackoff: GatewayReconnectBackoff(random: () => 1),
+        ),
+      );
+      final lease = pool.acquire(_conn('wake'));
+      for (var i = 0; i < 6; i++) {
+        lease.client.connectForeground().then((_) {}, onError: (Object _) {});
+        async.flushMicrotasks();
+      }
+      expect(lease.client.isBackingOff, isTrue);
+      unawaited(pool.probeLive());
+      async.flushMicrotasks();
+      expect(
+        lease.client.isBackingOff,
+        isFalse,
+        reason: 'foreground entry must not inherit the background delay',
+      );
+
+      lease.client.connect().then((_) {}, onError: (Object _) {});
+      async.flushMicrotasks();
+      expect(lease.client.isBackingOff, isTrue);
+      unawaited(pool.probeLive());
+      async.flushMicrotasks();
+      expect(
+        lease.client.isBackingOff,
+        isTrue,
+        reason: 'repeated wake signals must not create a reconnect storm',
+      );
+      unawaited(pool.closeAll());
+      async.elapse(const Duration(seconds: 2));
+    });
+  });
 }
 
 final class _Ticket extends DashboardClient {

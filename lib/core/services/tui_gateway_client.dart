@@ -1898,8 +1898,9 @@ class TuiGatewayClient
     if (_closed) return;
     _reconnectBackoff.markHealthy();
     _backoffUntil = null;
-    // Owners already waiting for the gap redial on the new path at once.
-    if (_redialGate != null) {
+    // Also replace an idle chat's automatic timer: it has no waiting owner
+    // and may still carry the old background delay after the app wakes.
+    if (_redialGate != null || _redialTimer != null) {
       unawaited(_dialAndRelease().catchError((Object _) {}));
     }
   }

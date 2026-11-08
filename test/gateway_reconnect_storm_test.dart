@@ -375,4 +375,58 @@ void main() {
       async.elapse(const Duration(seconds: 2));
     });
   });
+
+  test('wake reconnects an established chat before its background timer', () {
+    fakeAsync((async) {
+      final wasBackground = GatewayReconnectBackoff.backgroundCadence;
+      GatewayReconnectBackoff.backgroundCadence = true;
+      var networkUp = true;
+      var opens = 0;
+      late _DroppingChannel channel;
+      final client = TuiGatewayClient(
+        _connection('wake-background-chat'),
+        dashboard: _NetworkTicket(() => networkUp),
+        heartbeatInterval: Duration.zero,
+        now: () => DateTime(2026).add(async.elapsed),
+        reconnectBackoff: GatewayReconnectBackoff(random: () => 1),
+        channelFactory: (_, _) {
+          opens++;
+          return channel = _DroppingChannel(dropAfter: 99);
+        },
+      )..redialWhenIdle = true;
+      try {
+        unawaited(client.connect());
+        async.flushMicrotasks();
+        expect(client.isConnected, isTrue);
+        networkUp = false;
+        unawaited(channel._incoming.close());
+        async.flushMicrotasks();
+        for (var i = 0; i < 9; i++) {
+          async.elapse(client.reconnectBackoffRemaining);
+          async.flushMicrotasks();
+        }
+        expect(
+          client.reconnectBackoffRemaining,
+          greaterThan(const Duration(seconds: 30)),
+        );
+
+        networkUp = true;
+        GatewayReconnectBackoff.backgroundCadence = false;
+        client.resetReconnectBackoffForNetworkChange();
+        async.flushMicrotasks();
+        expect(
+          client.isConnected,
+          isTrue,
+          reason: 'wake must replace the old timer without waiting for it',
+        );
+        expect(opens, 2);
+        async.elapse(const Duration(seconds: 61));
+        expect(opens, 2, reason: 'the superseded timer must not dial again');
+      } finally {
+        GatewayReconnectBackoff.backgroundCadence = wasBackground;
+        unawaited(client.close());
+        async.elapse(const Duration(seconds: 2));
+      }
+    });
+  });
 }

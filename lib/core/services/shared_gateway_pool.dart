@@ -248,10 +248,10 @@ class SharedGatewayPool {
   /// use-gateway-boot.ts). Android may have frozen the app while a socket
   /// died without closing; it still reads as connected, so its owner (the
   /// list, Home) would not reconnect until the heartbeat noticed. A dead one
-  /// now fails within the probe deadline. Unlike [probeAll], nothing is
-  /// redialled and no backoff is reset.
-  Future<void> probeLive() =>
-      _probe(_entries.values.toList(), resetBackoff: false);
+  /// now fails within the probe deadline. Reuse the network-change holdoff
+  /// to clear stale background delays once, without repeated wake signals
+  /// bypassing the reconnect ladder. Healthy sockets are only probed.
+  Future<void> probeLive() => probeAll();
 
   /// Desktop's `WAKE_RECONNECT_HOLDOFF_MS`.
   @visibleForTesting

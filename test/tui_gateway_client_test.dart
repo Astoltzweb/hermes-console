@@ -1911,9 +1911,9 @@ void main() {
     );
     expect(client.isConnected, isTrue);
 
+    final errorObserved = expectLater(transportError, throwsA(isA<StateError>()));
     await socket.close();
-
-    await expectLater(transportError, throwsA(isA<StateError>()));
+    await errorObserved;
     expect(client.isConnected, isFalse);
   });
 
