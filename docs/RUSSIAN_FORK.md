@@ -31,6 +31,27 @@ Recovery does not resend a chat message. A server restart or an unreachable
 server can still interrupt the connection; the client must reconnect when the
 server is available again.
 
+## Android background network access
+
+Check the device's power policy as well as the app logs. Android can block
+this package with `BATTERY_SAVER|DOZE|APP_BACKGROUND`; DNS lookup errors then
+do not necessarily indicate a broken DNS server. During device diagnosis,
+allowlisting the personal package changed its effective network block to
+`NONE`, and the running app established its connection again.
+
+For a phone whose owner wants background access, set Console's battery use to
+unrestricted in Android settings, or apply the equivalent device-side ADB
+exception:
+
+```sh
+adb shell dumpsys deviceidle whitelist +dev.xpetalab.hermesconsole.personal
+```
+
+This affects only the installed personal package and can increase its battery
+use. Remove the exception with the same command and a `-` before the package.
+It is a phone setting, not an app permission or a repository default. Android
+may still suspend the process; the foreground reconnect fix remains necessary.
+
 ## Local build and validation
 
 The verified toolchain is Flutter 3.47.1 / Dart 3.13.1, Android SDK 36 and JDK 21.
