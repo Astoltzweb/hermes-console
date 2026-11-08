@@ -1755,8 +1755,8 @@
   "secBioTitle": "Биометрическое разблокирование",
   "secBioSubtitle": "Отпечаток пальца или лицо с PIN-кодом в качестве резервной копии",
   "secBioUnavailable": "Это устройство не имеет биометрических параметров",
-  "secLockTimeout": "Замок на выходе",
-  "secTimeoutInstant": "немедленно",
+  "secLockTimeout": "Блокировка при выходе",
+  "secTimeoutInstant": "Сразу",
   "secTimeout1min": "Через 1 мин.",
   "secTimeout5min": "Через 5 минут",
   "secTimeout15min": "Через 15 минут",
@@ -1997,7 +1997,7 @@
   "slReportBadge": "доклад",
   "slDraftBadge": "проект",
   "slRelativeNow": "теперь",
-  "slRelativeMinutes": "{count}в прошлом",
+  "slRelativeMinutes": "{count} мин. назад",
   "@slRelativeMinutes": {
     "placeholders": {
       "count": {
@@ -2005,7 +2005,7 @@
       }
     }
   },
-  "slRelativeHours": "{count}когда-то",
+  "slRelativeHours": "{count} ч. назад",
   "@slRelativeHours": {
     "placeholders": {
       "count": {
@@ -2013,7 +2013,7 @@
       }
     }
   },
-  "slRelativeDays": "{count}давным-давно",
+  "slRelativeDays": "{count} дн. назад",
   "@slRelativeDays": {
     "placeholders": {
       "count": {
@@ -3823,7 +3823,7 @@
   "roomActivitySettled": "финиширован",
   "roomActivityStopped": "комната остановлена",
   "roomActivityBounded": "предел разговора, достигший",
-  "roomSummaryNow": "Теперь",
+  "roomSummaryNow": "Сейчас",
   "roomSummaryDone": "Сделано",
   "roomSummaryPending": "В ожидании",
   "roomSummaryRecent": "недавнее",
@@ -4217,8 +4217,8 @@
   "@roomStatusRecovering": {
     "description": "Room header while the server re-checks a reply interrupted by a restart or lost connection; not a failure"
   },
-  "roomAgoNow": "Только сейчас",
-  "roomAgoMinutes": "{count} Минуту назад",
+  "roomAgoNow": "Только что",
+  "roomAgoMinutes": "{count} мин. назад",
   "@roomAgoMinutes": {
     "placeholders": {
       "count": {
@@ -4226,7 +4226,7 @@
       }
     }
   },
-  "roomAgoHours": "{count} когда-то",
+  "roomAgoHours": "{count} ч. назад",
   "@roomAgoHours": {
     "placeholders": {
       "count": {
@@ -4234,7 +4234,7 @@
       }
     }
   },
-  "roomAgoDays": "{count} давным-давно",
+  "roomAgoDays": "{count} дн. назад",
   "@roomAgoDays": {
     "placeholders": {
       "count": {
@@ -4508,7 +4508,7 @@
   "botProfileChat": "Чат",
   "botProfileRooms": "Комнаты · {count}",
   "botProfileRoutines": "Рутины",
-  "botProfileNow": "Теперь",
+  "botProfileNow": "Сейчас",
   "botProfileIdle": "Не работать ни над чем прямо сейчас",
   "botProfileWorkingOn": "Работая над \"{title}»",
   "botProfileWorkingInRoom": "Работая в \"{room}»",
@@ -5269,11 +5269,11 @@
   "mp1215ShowLess": "Поменьше",
   "pj1215ActionRejected": "Гермес отказался от акции. Проверь имя или ветку и попробуй еще раз.",
   "pj1215ActiveNotice": "“{name}Сейчас это активный проект.",
-  "pj1215AgoNow": "Только сейчас",
-  "pj1215AgoMinutes": "{count} Минуту назад",
-  "pj1215AgoHours": "{count} когда-то",
-  "pj1215AgoDays": "{count, plural, one{1 day ago} other{{count} days ago}}",
-  "pj1215AgoDate": "on {date}",
+  "pj1215AgoNow": "Только что",
+  "pj1215AgoMinutes": "{count} мин. назад",
+  "pj1215AgoHours": "{count} ч. назад",
+  "pj1215AgoDays": "{count, plural, one{1 день назад} few{{count} дня назад} many{{count} дней назад} other{{count} дня назад}}",
+  "pj1215AgoDate": "{date}",
   "pj1215AppearanceTitle": "внешний вид",
   "pj1215AppearanceAdoptNote": "Гермес нашел этот проект самостоятельно. Давая ему цвет или иконку, он сохраняет его как ваш проект, так же, как это делает Desktop.",
   "pj1215AppearanceColor": "цвет",
@@ -6811,10 +6811,10 @@
   "hwAddBot": "Один бот",
   "hwAddChat": "Один чат",
   "hwAddLimits": "пределы",
-  "hwKindNow": "Теперь",
+  "hwKindNow": "Сейчас",
   "hwKindCron": "Крон",
   "hwKindTasks": "Задачи",
-  "hwNowCalm": "Все тихо.",
+  "hwNowCalm": "Пока всё спокойно",
   "hwNowAsks": "{name} спрашивать тебя",
   "hwNowWaits": "{name} Ждет тебя,",
   "hwNowFailed": "{name} неудачный",
@@ -7326,11 +7326,11 @@
       }
     }
   },
-  "i18n131RelativeNow": "Только сейчас",
+  "i18n131RelativeNow": "Только что",
   "@i18n131RelativeNow": {
     "description": "Manual UI copy migrated to the shared catalog."
   },
-  "i18n131RelativeMinutes": "{count}в прошлом",
+  "i18n131RelativeMinutes": "{count} мин. назад",
   "@i18n131RelativeMinutes": {
     "description": "Manual UI copy migrated to the shared catalog.",
     "placeholders": {
@@ -7339,7 +7339,7 @@
       }
     }
   },
-  "i18n131RelativeHours": "{count}когда-то",
+  "i18n131RelativeHours": "{count} ч. назад",
   "@i18n131RelativeHours": {
     "description": "Manual UI copy migrated to the shared catalog.",
     "placeholders": {
@@ -7348,7 +7348,7 @@
       }
     }
   },
-  "i18n131RelativeDays": "{count}давным-давно",
+  "i18n131RelativeDays": "{count} дн. назад",
   "@i18n131RelativeDays": {
     "description": "Manual UI copy migrated to the shared catalog.",
     "placeholders": {
@@ -7357,7 +7357,7 @@
       }
     }
   },
-  "i18n131SinceMinutes": "{count}в прошлом",
+  "i18n131SinceMinutes": "{count} мин. назад",
   "@i18n131SinceMinutes": {
     "description": "Manual UI copy migrated to the shared catalog.",
     "placeholders": {
@@ -7366,7 +7366,7 @@
       }
     }
   },
-  "i18n131SinceHours": "{count}когда-то",
+  "i18n131SinceHours": "{count} ч. назад",
   "@i18n131SinceHours": {
     "description": "Manual UI copy migrated to the shared catalog.",
     "placeholders": {
@@ -7375,7 +7375,7 @@
       }
     }
   },
-  "i18n131SinceDays": "{count}давным-давно",
+  "i18n131SinceDays": "{count} дн. назад",
   "@i18n131SinceDays": {
     "description": "Manual UI copy migrated to the shared catalog.",
     "placeholders": {

@@ -62,7 +62,7 @@ flutter pub get --enforce-lockfile
 flutter gen-l10n
 flutter test --no-pub test/gateway_reconnect_storm_test.dart test/shared_gateway_pool_test.dart test/tui_gateway_client_test.dart test/connection_health_tracker_test.dart test/net1_connection_status_test.dart
 flutter analyze --no-pub
-flutter build apk --debug --flavor full --target-platform android-arm64 --build-name 1.3.1-ru.2 --build-number 9651 --no-pub
+flutter build apk --debug --flavor full --target-platform android-arm64 --build-name 1.3.1-ru.3 --build-number 9652 --no-pub
 ```
 
 The debug application ID retains the `.personal` suffix, so an update signed
