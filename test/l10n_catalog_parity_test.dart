@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/l10n/app_localizations_en.dart';
 import 'package:hermes_android/l10n/app_localizations_es.dart';
 import 'package:hermes_android/l10n/app_localizations_pt.dart';
+import 'package:hermes_android/l10n/app_localizations_ru.dart';
 
 Map<String, Object?> _readCatalog(String path) =>
     jsonDecode(File(path).readAsStringSync()) as Map<String, Object?>;
@@ -18,6 +19,35 @@ Set<String> _placeholders(Object? message) => RegExp(
 
 void main() {
   final rawDartInterpolation = RegExp(r'\$\{|\$[A-Za-z_]');
+
+  test('Russian catalog preserves every template key and argument', () {
+    final template = _readCatalog('lib/l10n/app_es.arb');
+    final russian = _readCatalog('lib/l10n/app_ru.arb');
+    expect(russian['@@locale'], 'ru');
+    expect(_messageKeys(russian), _messageKeys(template));
+    for (final key in _messageKeys(template)) {
+      expect(russian[key], isA<String>(), reason: key);
+      expect((russian[key] as String).trim(), isNotEmpty, reason: key);
+      expect(_placeholders(russian[key]), _placeholders(template[key]),
+          reason: '$key must retain the template arguments');
+      expect(rawDartInterpolation.hasMatch(russian[key] as String), isFalse,
+          reason: '$key must use ICU, not Dart interpolation');
+    }
+  });
+
+  test('Russian counts use Russian plural rules beyond the first ten', () {
+    final s = StringsRu();
+    expect(s.mdlModelCount(1), '1 модель');
+    expect(s.mdlModelCount(2), '2 модели');
+    expect(s.mdlModelCount(5), '5 моделей');
+    expect(s.mdlModelCount(11), '11 моделей');
+    expect(s.mdlModelCount(21), '21 модель');
+    expect(s.mdlModelCount(22), '22 модели');
+    expect(s.mdlModelCount(25), '25 моделей');
+    expect(s.chaBackgroundAgentsFinished(21), contains('21 агент'));
+    expect(s.chaBackgroundAgentsFinished(22), contains('22 агента'));
+    expect(s.chaBackgroundAgentsFinished(25), contains('25 агентов'));
+  });
 
   test('no catalog message contains unexpanded Dart interpolation', () {
     for (final file in Directory('lib/l10n').listSync().whereType<File>()) {

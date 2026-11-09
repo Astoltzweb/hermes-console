@@ -1,5 +1,10 @@
 # Translation workflow
 
+The Russian personal fork also maintains `app_ru.arb` under the owner's
+explicit full-localization request. Its scope and current review checkpoint
+are in `docs/RUSSIAN_LOCALIZATION_REVIEW.md`. The older language/channel limits
+below describe the upstream translation lane, not that Russian review.
+
 `app_es.arb` is the authoritative template. Use `app_en.arb` to clarify
 terminology, but check Spanish when their meanings differ. Translate only the
 approved languages: Chinese, Brazilian Portuguese, German, French, Japanese,

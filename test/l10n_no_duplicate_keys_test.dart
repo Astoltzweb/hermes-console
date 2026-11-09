@@ -44,6 +44,7 @@ void main() {
     'lib/l10n/app_en.arb',
     'lib/l10n/app_es.arb',
     'lib/l10n/app_pt.arb',
+    'lib/l10n/app_ru.arb',
   ]) {
     test('$path has no duplicate keys', () {
       final source = File(path).readAsStringSync();
