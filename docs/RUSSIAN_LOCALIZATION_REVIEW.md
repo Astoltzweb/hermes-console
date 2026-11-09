@@ -18,9 +18,9 @@ the catalog has already been fully reviewed. Baseline: `243e8d6`.
 
 ## Current checkpoint
 
-1,366 unique messages have been reviewed. The first 1,360 messages in the
-English catalog's insertion order are covered, together with six additional
-permission/model messages. The next sequential key is `slFilterArchived`.
+2,055 unique messages have been reviewed. The first 2,050 messages in the
+English catalog's insertion order are covered, together with five additional
+permission/model messages. The next sequential key is `chaAttachmentPreviewLoading`.
 
 Covered areas: connection setup, navigation, themes, chat controls and errors,
 voice chat status, generated media, MoA, Kanban, SSH/SFTP, SOUL editing, memory,
@@ -30,7 +30,8 @@ reasoning levels, scheduled tasks, security and session details.
 The remaining catalog and the non-ARB audit are still pending. The initial
 handwritten-copy inventory contains 197 candidates; these include intentional
 technical strings and require individual inspection. The Russian native widget
-resources also need review. No full linguistic-completion claim is made here.
+resources also need review. MoA fan-out values (`per_iteration`, `user_turn`)
+need localized display labels; the wire values must stay unchanged. No full linguistic-completion claim is made here.
 
 ## Terminology
 
