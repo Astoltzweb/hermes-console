@@ -2536,7 +2536,7 @@ class HermesUpdateProgressPanel extends StatelessWidget {
                 ],
                 const SizedBox(height: 6),
                 Text(
-                  '${progress.elapsedSeconds}s',
+                  s.i18n131DurationSeconds(progress.elapsedSeconds.toString()),
                   style: TextStyle(fontSize: 11, color: colors.textSecondary),
                 ),
               ],

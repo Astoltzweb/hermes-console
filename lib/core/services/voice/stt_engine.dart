@@ -23,6 +23,10 @@ const Duration kVoiceTurnSilenceTimeout = Duration(milliseconds: 1250);
 const Duration kVoiceTurnIdleSilenceTimeout = Duration(seconds: 12);
 const Duration kVoiceTurnMaxDuration = Duration(seconds: 60);
 
+/// Manual dictation has no app recording deadline. Processing a long capture
+/// has a separate budget; conversational endpointing keeps its short deadline.
+const Duration kDictationTranscriptionTimeout = Duration(hours: 2);
+
 typedef VoiceTurnTimerFactory =
     Timer Function(Duration duration, void Function() callback);
 
@@ -45,6 +49,14 @@ class SttResult {
   const SttResult(this.text, this.isFinal, {this.meta});
 }
 
+/// A later chunk failed; already recognized text must remain in the composer.
+class PartialTranscriptionException implements Exception {
+  const PartialTranscriptionException(this.text);
+  final String text;
+  @override
+  String toString() => 'Some dictation could not be transcribed.';
+}
+
 abstract class SttEngine {
   /// ¿Está disponible el motor en este dispositivo? (permiso/soporte).
   Future<bool> available();
@@ -61,7 +73,7 @@ abstract class SttEngine {
   /// stream no equivale a este ACK y una operación cancelada no debe emitirlo.
   /// [continuous]: dictado controlado por el usuario. Cuando es true el motor NO
   /// cierra el turno por silencio (las pausas naturales no lo cortan); solo para
-  /// con stop() manual o por el tope de seguridad [maxDuration]. Default false:
+  /// con stop() manual. Default false:
   /// modo conversación de voz, que sí auto-cierra por silencio para turnos ágiles.
   Stream<SttResult> listen({
     String localeId = 'es_ES',
@@ -101,7 +113,8 @@ abstract interface class CapturedWavSttEngine {
 
 /// System recognition locale preferences derived from the shared language registry.
 final Map<String, List<String>> kSystemSttLocalePrefs = Map.unmodifiable({
-  for (final entry in voiceLanguages.entries) entry.key: entry.value.systemSttLocales,
+  for (final entry in voiceLanguages.entries)
+    entry.key: entry.value.systemSttLocales,
 });
 
 /// Frontera inyectable con los plugins usados por [SystemSttEngine]. Mantiene
@@ -164,7 +177,7 @@ class _PluginSystemSttRuntime implements SystemSttRuntime {
       pauseFor: continuous
           ? const Duration(seconds: 30)
           : kVoiceTurnSilenceTimeout,
-      listenFor: kVoiceTurnMaxDuration,
+      listenFor: continuous ? const Duration(hours: 1) : kVoiceTurnMaxDuration,
     ),
   );
 
@@ -839,8 +852,9 @@ class WhisperSttEngine implements SttEngine {
           'floor=${_noiseFloorDb?.toStringAsFixed(1)} heard=$_heardSpeech',
         );
       }
-      // Tope de seguridad: nunca grabar indefinidamente.
-      if (vadEnabled &&
+      // The short deadline belongs to conversation, never manual dictation.
+      if (!_continuous &&
+          vadEnabled &&
           _startedAt != null &&
           now.difference(_startedAt!) >= maxDuration) {
         _autoStop();
@@ -912,7 +926,7 @@ class WhisperSttEngine implements SttEngine {
       }
       if (_continuous) {
         // Dictado continuo: las pausas NO cierran el turno. Manda el usuario
-        // (botón parar) o el tope de seguridad. Así el micro no desaparece a
+        // (botón parar). Así el micro no desaparece a
         // mitad de frase ni reabre/recorta captando colas de ruido.
         return;
       }
@@ -1037,7 +1051,9 @@ class WhisperSttEngine implements SttEngine {
       // dispositivo. Y un TIMEOUT de seguridad: si el modelo se atasca (típico
       // con `base` en CPU floja), fallamos con un error claro en vez de dejar la
       // UI colgada para siempre en "transcribiendo".
-      final budget = maxDuration + const Duration(seconds: 45);
+      final budget = _continuous
+          ? kDictationTranscriptionTimeout
+          : maxDuration + const Duration(seconds: 45);
       latencyTurn?.mark(VoiceLatencyPoint.sttStarted);
       final text = await _runtime
           .transcribe(
@@ -1052,8 +1068,13 @@ class WhisperSttEngine implements SttEngine {
         controller.add(SttResult(text, true));
       }
       await controller.close();
-    } catch (_) {
+    } catch (error) {
       if (!controller.isClosed) {
+        if (error is PartialTranscriptionException &&
+            !_disposed &&
+            _operation == null) {
+          controller.add(SttResult(error.text, true));
+        }
         controller.addError(Exception('Transcription failed.'));
         await controller.close();
       }

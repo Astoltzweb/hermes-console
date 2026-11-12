@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hermes_android/core/utils/enum_labels.dart';
 import 'package:hermes_android/l10n/app_localizations_en.dart';
 import 'package:hermes_android/l10n/app_localizations_es.dart';
 import 'package:hermes_android/l10n/app_localizations_pt.dart';
@@ -28,10 +29,16 @@ void main() {
     for (final key in _messageKeys(template)) {
       expect(russian[key], isA<String>(), reason: key);
       expect((russian[key] as String).trim(), isNotEmpty, reason: key);
-      expect(_placeholders(russian[key]), _placeholders(template[key]),
-          reason: '$key must retain the template arguments');
-      expect(rawDartInterpolation.hasMatch(russian[key] as String), isFalse,
-          reason: '$key must use ICU, not Dart interpolation');
+      expect(
+        _placeholders(russian[key]),
+        _placeholders(template[key]),
+        reason: '$key must retain the template arguments',
+      );
+      expect(
+        rawDartInterpolation.hasMatch(russian[key] as String),
+        isFalse,
+        reason: '$key must use ICU, not Dart interpolation',
+      );
     }
   });
 
@@ -49,20 +56,44 @@ void main() {
     expect(s.chaBackgroundAgentsFinished(25), contains('25 агентов'));
   });
 
+  test('Russian exact-one copy does not leak into 21 or 101', () {
+    final s = StringsRu();
+    expect(roomMemberCountLabel(s, 1), '1 участник, команда неполная');
+    expect(roomMemberCountLabel(s, 21), '21 участник');
+    expect(roomMemberCountLabel(s, 101), '101 участник');
+    expect(s.tc1215CopyCode(1), 'Скопировать 1 блок кода');
+    expect(s.tc1215CopyCode(21), 'Скопировать 21 блок кода');
+    expect(s.tc1215CopyCode(22), 'Скопировать 22 блока кода');
+    expect(s.tc1215CopyCode(25), 'Скопировать 25 блоков кода');
+  });
+
+  test('Russian MoA labels describe the mode and preserve unknown values', () {
+    final s = StringsRu();
+    expect(s.moaFanout('per_iteration'), contains('на каждом шаге'));
+    expect(s.moaFanout('user_turn'), contains('на запрос пользователя'));
+    expect(s.moaFanout('future_mode'), contains('future_mode'));
+  });
+
   test('no catalog message contains unexpanded Dart interpolation', () {
     for (final file in Directory('lib/l10n').listSync().whereType<File>()) {
       if (!file.path.endsWith('.arb')) continue;
       final catalog = _readCatalog(file.path);
       for (final key in _messageKeys(catalog)) {
-        expect(rawDartInterpolation.hasMatch(catalog[key] as String), isFalse,
-            reason: '${file.path}:$key must use ICU placeholders');
+        expect(
+          rawDartInterpolation.hasMatch(catalog[key] as String),
+          isFalse,
+          reason: '${file.path}:$key must use ICU placeholders',
+        );
       }
     }
   });
 
   test('raw Dart interpolation guard rejects both syntax mutants', () {
     expect(rawDartInterpolation.hasMatch(r'Identifier @$_profileName'), isTrue);
-    expect(rawDartInterpolation.hasMatch(r'Identifier @${profileName}'), isTrue);
+    expect(
+      rawDartInterpolation.hasMatch(r'Identifier @${profileName}'),
+      isTrue,
+    );
     expect(rawDartInterpolation.hasMatch('Identifier @{profileName}'), isFalse);
     expect(rawDartInterpolation.hasMatch(r'Price: $5'), isFalse);
   });
@@ -77,10 +108,16 @@ void main() {
       expect(_messageKeys(catalog), keys, reason: lang);
       for (final key in keys) {
         expect(catalog[key], isA<String>(), reason: '$lang:$key');
-        expect((catalog[key] as String).trim(), isNotEmpty,
-            reason: '$lang:$key');
-        expect(_placeholders(catalog[key]), _placeholders(es[key]),
-            reason: '$lang:$key placeholders must match the template');
+        expect(
+          (catalog[key] as String).trim(),
+          isNotEmpty,
+          reason: '$lang:$key',
+        );
+        expect(
+          _placeholders(catalog[key]),
+          _placeholders(es[key]),
+          reason: '$lang:$key placeholders must match the template',
+        );
       }
     }
   });

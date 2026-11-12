@@ -6675,5 +6675,15 @@
         "type": "String"
       }
     }
-  }
+  },
+  "ieDiagnosticDashboard": "대시보드",
+  "commonKilobytes": "{value} KB",
+  "@commonKilobytes": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "roomAvatarSingleMember": "멤버 1명, 불완전한 팀"
 }

@@ -6675,5 +6675,15 @@
         "type": "String"
       }
     }
-  }
+  },
+  "ieDiagnosticDashboard": "Dashboard",
+  "commonKilobytes": "{value} KB",
+  "@commonKilobytes": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "roomAvatarSingleMember": "1 Mitglied, unvollständiges Team"
 }

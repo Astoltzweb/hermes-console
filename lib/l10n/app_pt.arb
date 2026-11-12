@@ -11665,5 +11665,15 @@
         "type": "String"
       }
     }
-  }
+  },
+  "ieDiagnosticDashboard": "Painel de controle",
+  "commonKilobytes": "{value} KB",
+  "@commonKilobytes": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "roomAvatarSingleMember": "1 membro, equipe incompleta"
 }

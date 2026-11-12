@@ -650,7 +650,9 @@ class _MemoryScreenState extends State<MemoryScreen>
                         Row(
                           children: [
                             Text(
-                              '$kb KB',
+                              Strings.of(
+                                context,
+                              ).commonKilobytes(kb.toString()),
                               style: TextStyle(
                                 fontSize: 12,
                                 color: colors.textSecondary,

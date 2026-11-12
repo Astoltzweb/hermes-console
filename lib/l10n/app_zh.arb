@@ -6675,5 +6675,15 @@
         "type": "String"
       }
     }
-  }
+  },
+  "ieDiagnosticDashboard": "控制面板",
+  "commonKilobytes": "{value} KB",
+  "@commonKilobytes": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "roomAvatarSingleMember": "1 位成员，团队不完整"
 }

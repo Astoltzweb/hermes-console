@@ -33,9 +33,9 @@
         <item quantity="other">Ещё %d</item>
     </plurals>
     <plurals name="rich_auto_summary">
-        <item quantity="one">%d автоматизация</item>
-        <item quantity="few">%d автоматизации</item>
-        <item quantity="many">%d автоматизаций</item>
-        <item quantity="other">%d автоматизации</item>
+        <item quantity="one">%d автоматическая задача</item>
+        <item quantity="few">%d автоматические задачи</item>
+        <item quantity="many">%d автоматических задач</item>
+        <item quantity="other">%d автоматические задачи</item>
     </plurals>
 </resources>

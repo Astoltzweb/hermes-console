@@ -329,22 +329,35 @@ class _FakeSherpaRuntime implements SherpaSttRuntime {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('system STT resolves all nine language records before listening', () async {
-    for (final locale in ['es_ES', 'en_US', 'pt_BR', 'de_DE', 'fr_FR', 'it_IT', 'ja_JP', 'ko_KR', 'zh_CN']) {
-      final runtime = _FakeSystemRuntime()
-        ..localeList = Future.value(['es_ES', 'en_US', locale]);
-      final engine = SystemSttEngine(lang: locale, runtime: runtime);
-      try {
-        final listening = engine.listen().drain<void>();
-        await _waitUntil(() => runtime.listenCalls == 1);
-        expect(runtime.requestedLocale, locale);
-        runtime.onResult?.call('test', true);
-        await listening.timeout(const Duration(seconds: 1));
-      } finally {
-        await engine.dispose();
+  test(
+    'system STT resolves all nine language records before listening',
+    () async {
+      for (final locale in [
+        'es_ES',
+        'en_US',
+        'pt_BR',
+        'de_DE',
+        'fr_FR',
+        'it_IT',
+        'ja_JP',
+        'ko_KR',
+        'zh_CN',
+      ]) {
+        final runtime = _FakeSystemRuntime()
+          ..localeList = Future.value(['es_ES', 'en_US', locale]);
+        final engine = SystemSttEngine(lang: locale, runtime: runtime);
+        try {
+          final listening = engine.listen().drain<void>();
+          await _waitUntil(() => runtime.listenCalls == 1);
+          expect(runtime.requestedLocale, locale);
+          runtime.onResult?.call('test', true);
+          await listening.timeout(const Duration(seconds: 1));
+        } finally {
+          await engine.dispose();
+        }
       }
-    }
-  });
+    },
+  );
 
   group('SystemSttEngine startup cancellation', () {
     test(
@@ -1171,6 +1184,83 @@ void main() {
       await engine.dispose();
       await runtime.amplitudes.close();
     });
+
+    test(
+      'manual dictation ignores the conversational recording deadline',
+      () async {
+        final runtime = _FakeWhisperRuntime();
+        final engine = WhisperSttEngine(
+          runtime: runtime,
+          maxDuration: Duration.zero,
+        );
+        var ended = false;
+        engine
+            .listen(continuous: true)
+            .listen((_) {}, onDone: () => ended = true);
+        await _waitUntil(() => runtime.amplitudeCalls == 1);
+        for (var i = 0; i < 5; i++) {
+          runtime.amplitudes.add(Amplitude(current: -4, max: -4));
+          await _flush();
+        }
+        expect(runtime.stopCalls, 0);
+        expect(ended, isFalse);
+        await engine.stop();
+        await _flush();
+        expect(ended, isTrue);
+        await engine.dispose();
+        await runtime.amplitudes.close();
+      },
+    );
+
+    test('conversation still stops at its recording deadline', () async {
+      final runtime = _FakeWhisperRuntime();
+      final engine = WhisperSttEngine(
+        runtime: runtime,
+        maxDuration: Duration.zero,
+      );
+      final done = engine.listen().drain<void>();
+      await _waitUntil(() => runtime.amplitudeCalls == 1);
+      runtime.amplitudes.add(Amplitude(current: -4, max: -4));
+      await done;
+      expect(runtime.stopCalls, greaterThan(0));
+      await engine.dispose();
+      await runtime.amplitudes.close();
+    });
+
+    test(
+      'a later transcription failure emits recognized text before the error',
+      () async {
+        final file = File(
+          '${Directory.systemTemp.path}/partial-dictation-${DateTime.now().microsecondsSinceEpoch}.wav',
+        )..writeAsBytesSync(const [1]);
+        addTearDown(() {
+          if (file.existsSync()) file.deleteSync();
+        });
+        final runtime = _FakeWhisperRuntime()
+          ..path = Future.value(file.path)
+          ..stopping = Future.value(file.path)
+          ..transcribeError = const PartialTranscriptionException(
+            'already recognized',
+          );
+        final engine = WhisperSttEngine(runtime: runtime);
+        final events = <String>[];
+        final done = Completer<void>();
+        engine
+            .listen(continuous: true)
+            .listen(
+              (result) => events.add(result.text),
+              onError: (Object error) => events.add('error'),
+              onDone: done.complete,
+            );
+        await _waitUntil(() => runtime.amplitudeCalls == 1);
+        await engine.stop();
+        await done.future;
+        expect(events, ['already recognized', 'error']);
+        expect(file.existsSync(), isFalse);
+        await engine.dispose();
+        await runtime.amplitudes.close();
+      },
+    );
 
     test('transcription timeout removes its temporary WAV', () async {
       final file = File(

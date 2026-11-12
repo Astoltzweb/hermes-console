@@ -2628,7 +2628,7 @@ class _VoiceSettingsScreenState extends State<VoiceSettingsScreen>
                   ? _downloadWhisper
                   : () => _downloadSherpa(model),
               icon: const Icon(Icons.download_rounded),
-              label: Text('${s.voiceDownloadAction} · $sizeMb MB'),
+              label: Text(s.voiceNeedsDownload(sizeMb.toString())),
             )
           else if (downloaded)
             TextButton(
@@ -2790,7 +2790,7 @@ class _VoiceSettingsScreenState extends State<VoiceSettingsScreen>
                     onPressed: () => _downloadOnnx(selected),
                     icon: const Icon(Icons.download_rounded),
                     label: Text(
-                      '${s.voiceDownloadAction} · ${selected.sizeMb} MB',
+                      s.voiceNeedsDownload(selected.sizeMb.toString()),
                     ),
                   )
                 else

@@ -2223,7 +2223,7 @@ class _TechnicalDiagnosticsDisclosure extends StatelessWidget {
             Expanded(
               child: HermesSecondaryButton(
                 key: const ValueKey('diagnostics-run-dashboard'),
-                label: 'Dashboard',
+                label: s.ieDiagnosticDashboard,
                 icon: Icons.admin_panel_settings_outlined,
                 onTap: running ? null : () => onRun(_DiagnosticScope.dashboard),
               ),
@@ -2320,7 +2320,7 @@ class _ProbeResultCard extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(right: 8),
                       child: Text(
-                        '${r.latencyMs}ms',
+                        s.hwServerLatency(r.latencyMs!),
                         style: TextStyle(
                           fontSize: 10,
                           color: colors.textTertiary,

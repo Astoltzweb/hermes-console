@@ -11091,5 +11091,15 @@
   },
   "serverDictationConsentTitle": "Reconocimiento de voz en el servidor",
   "serverDictationConsentBody": "La grabación de voz se enviará al servidor Hermes conectado a este chat para transcribirla.",
-  "serverDictationUnavailableBody": "No se pudo acceder al reconocimiento de voz del servidor Hermes conectado a este chat. Comprueba la conexión y los ajustes de voz del servidor."
+  "serverDictationUnavailableBody": "No se pudo acceder al reconocimiento de voz del servidor Hermes conectado a este chat. Comprueba la conexión y los ajustes de voz del servidor.",
+  "ieDiagnosticDashboard": "Panel de control",
+  "commonKilobytes": "{value} KB",
+  "@commonKilobytes": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "roomAvatarSingleMember": "1 miembro, equipo incompleto"
 }

@@ -293,8 +293,10 @@ SherpaSttEngine _engine(
   _FakeWorker worker, {
   void Function(SherpaSttWorkerConfig config)? onConfig,
   VoiceTurnTimerFactory? timerFactory,
+  Duration maxDuration = kVoiceTurnMaxDuration,
 }) => SherpaSttEngine(
   model: sherpaModelByKind(SherpaModelKind.whisperBase),
+  maxDuration: maxDuration,
   manager: _FakeManager(),
   runtime: runtime,
   timerFactory: timerFactory,
@@ -306,6 +308,27 @@ SherpaSttEngine _engine(
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
+  test(
+    'continuous dictation does not stop at the conversation deadline',
+    () async {
+      final runtime = _FakeRuntime();
+      final worker = _FakeWorker();
+      final engine = _engine(runtime, worker, maxDuration: Duration.zero);
+      var ended = false;
+      engine
+          .listen(continuous: true)
+          .listen((_) {}, onDone: () => ended = true);
+      await _waitFor(() => runtime.startCalls == 1);
+      runtime.audio.add(Uint8List.fromList(const [0, 0]));
+      await _waitFor(() => worker.acceptedGenerations.isNotEmpty);
+      expect(runtime.stopCalls, 0);
+      expect(ended, isFalse);
+      await engine.stop();
+      await engine.dispose();
+      await runtime.audio.close();
+    },
+  );
 
   test('dictado local captura habla con el preset acústico de Desktop', () {
     _expectDesktopSpeechCaptureConfig();

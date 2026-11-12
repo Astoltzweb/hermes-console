@@ -16211,7 +16211,7 @@ class _ChatScreenState extends State<ChatScreen>
     // null = usar global; los demás = override de sesión.
     final options = <(ApprovalMode?, String, String)>[
       (null, s.chaModeGlobalTitle, s.chaModeGlobalSub),
-      (ApprovalMode.yolo, 'YOLO', s.chaModeYoloSub),
+      (ApprovalMode.yolo, s.modeYolo, s.chaModeYoloSub),
       (
         ApprovalMode.interactive,
         s.chaModeInteractiveTitle,
@@ -16390,7 +16390,7 @@ class _ChatScreenState extends State<ChatScreen>
   /// descartaba lo dictado con un falso «no se reconoció voz».
   Duration _dictationStopBudget(VoiceService voice) =>
       voice.sttRecordsThenTranscribes
-      ? const Duration(minutes: 3)
+      ? kDictationTranscriptionTimeout + const Duration(seconds: 1)
       : const Duration(seconds: 4);
 
   Future<void> _startDictation() async {

@@ -167,7 +167,7 @@ final class VoiceRoomDictation extends RoomDictation {
     // fallback dropped every dictation the server took longer to transcribe.
     _fallback = Timer(
       voice.sttRecordsThenTranscribes
-          ? const Duration(minutes: 3)
+          ? kDictationTranscriptionTimeout + const Duration(seconds: 1)
           : const Duration(seconds: 4),
       _finish,
     );

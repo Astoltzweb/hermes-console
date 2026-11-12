@@ -1367,7 +1367,9 @@ class SherpaSttEngine
       return;
     }
     final now = DateTime.now();
-    if (_startedAt != null && now.difference(_startedAt!) >= maxDuration) {
+    if (!_continuous &&
+        _startedAt != null &&
+        now.difference(_startedAt!) >= maxDuration) {
       _autoStop();
       return;
     }
@@ -1378,10 +1380,16 @@ class SherpaSttEngine
     if (!operation.recognizerReady) onLevel?.call(_pcm16Level(bytes));
 
     if (operation.queueAudioUntilWorkerCommand) {
-      // El turno ya está acotado por [maxDuration] (60 s por defecto), así que
-      // conservar todo el PCM pendiente cuesta como máximo ~1,9 MB. El límite
-      // anterior de 15 s descartaba el resto sin avisar si Android tardaba en
-      // crear el isolate o resolver las rutas del modelo.
+      // A stalled cold model must not accumulate unbounded audio now that
+      // manual dictation has no time limit. This is a startup-buffer bound,
+      // not a recording deadline once the recognizer accepts audio.
+      if (operation.pendingAudioBytes + bytes.length > 16000 * 2 * 60) {
+        operation.controller.addError(
+          Exception('Speech recognizer did not start.'),
+        );
+        _autoStop(notifySpeechEnd: false);
+        return;
+      }
       final copy = Uint8List.fromList(bytes);
       operation.pendingAudio.add(copy);
       operation.pendingAudioBytes += copy.length;
@@ -1445,7 +1453,7 @@ class SherpaSttEngine
         _heardSpeech = true;
       }
       // Dictado continuo: las pausas NO cierran el turno (manda el usuario con
-      // el botón parar, o el tope maxDuration). En modo voz sí auto-cerramos
+      // el botón parar). En modo voz sí auto-cerramos
       // por silencio para encadenar turnos rápido.
       final timestamp = now ?? DateTime.now();
       _silenceSince ??= timestamp;

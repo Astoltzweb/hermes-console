@@ -21,6 +21,7 @@ import '../models/agent_profile.dart';
 import '../models/connection.dart';
 import '../models/dock_config.dart' show DockItemId;
 import '../models/kanban.dart';
+import '../utils/enum_labels.dart';
 import '../models/kanban_orchestration.dart';
 import '../services/kanban_client.dart';
 import '../services/kanban_watch_board.dart';
@@ -2679,7 +2680,13 @@ class _TasksScreenState extends State<TasksScreen> with WidgetsBindingObserver {
                 if (inspection.pid != null)
                   _inspectionRow('PID', '${inspection.pid}'),
                 if (inspection.status?.isNotEmpty == true)
-                  _inspectionRow(copy.status, inspection.status!),
+                  _inspectionRow(
+                    copy.status,
+                    kanbanRunStatusLabel(
+                      Strings.of(context),
+                      inspection.status!,
+                    ),
+                  ),
                 if (inspection.cpuPercent != null)
                   _inspectionRow('CPU', '${inspection.cpuPercent}%'),
                 if (inspection.memoryRssBytes != null)
@@ -3650,26 +3657,28 @@ class _Kanban020Copy {
   factory _Kanban020Copy.forContext(BuildContext context) =>
       _Kanban020Copy._(Strings.of(context));
 
-  String get bulkPartialTitle =>
-      _strings.i18n131TasksBulkPartialTitle;
-  String bulkPartial(int ok, int failed) => _strings.i18n131TasksBulkPartial(ok, failed);
+  String get bulkPartialTitle => _strings.i18n131TasksBulkPartialTitle;
+  String bulkPartial(int ok, int failed) =>
+      _strings.i18n131TasksBulkPartial(ok, failed);
   String get actionUnavailable => _strings.i18n131TasksActionUnavailable;
   String get specify => _strings.i18n131TasksSpecify;
   String get specifyTitle => _strings.i18n131TasksSpecifyTitle;
   String get specifyBody => _strings.i18n131TasksSpecifyBody;
-  String get specifyStarted =>
-      _strings.i18n131TasksSpecifyStarted;
+  String get specifyStarted => _strings.i18n131TasksSpecifyStarted;
   String get decompose => _strings.i18n131TasksDecompose;
   String get decomposeTitle => _strings.i18n131TasksDecomposeTitle;
   String get decomposeBody => _strings.i18n131TasksDecomposeBody;
-  String decomposeResult(int count) => _strings.i18n131TasksDecomposeResult(count);
+  String decomposeResult(int count) =>
+      _strings.i18n131TasksDecomposeResult(count);
   String get attachmentTooLarge => _strings.i18n131TasksAttachmentTooLarge;
-  String get attachmentUnavailable => _strings.i18n131TasksAttachmentUnavailable;
+  String get attachmentUnavailable =>
+      _strings.i18n131TasksAttachmentUnavailable;
   String get attachmentUploaded => _strings.i18n131TasksAttachmentUploaded;
   String get saveAttachment => _strings.i18n131TasksSaveAttachment;
   String get attachmentSaved => _strings.i18n131TasksAttachmentSaved;
   String get deleteAttachment => _strings.i18n131TasksDeleteAttachment;
-  String deleteAttachmentBody(String name) => _strings.i18n131TasksDeleteAttachmentBody(name);
+  String deleteAttachmentBody(String name) =>
+      _strings.i18n131TasksDeleteAttachmentBody(name);
   String get delete => _strings.i18n131TasksDelete;
   String get attachmentDeleted => _strings.i18n131TasksAttachmentDeleted;
   String get workerLog => _strings.i18n131TasksWorkerLog;
@@ -3695,9 +3704,12 @@ class _Kanban020Copy {
   String get chooseProfile => _strings.i18n131TasksChooseProfile;
   String get reassign => _strings.i18n131TasksReassign;
   String get reassignTitle => _strings.i18n131TasksReassignTitle;
-  String reassignBody(String profile, bool reclaims) => (reclaims ? _strings.i18n131TasksReassignBodyReclaims(profile) : _strings.i18n131TasksReassignBody(profile));
+  String reassignBody(String profile, bool reclaims) => (reclaims
+      ? _strings.i18n131TasksReassignBodyReclaims(profile)
+      : _strings.i18n131TasksReassignBody(profile));
   String get taskReassigned => _strings.i18n131TasksTaskReassigned;
-  String get modelOptionsUnavailable => _strings.i18n131TasksModelOptionsUnavailable;
+  String get modelOptionsUnavailable =>
+      _strings.i18n131TasksModelOptionsUnavailable;
   String get chooseModel => _strings.i18n131TasksChooseModel;
   String get inheritModel => _strings.i18n131TasksInheritModel;
   String get reasoningEffort => _strings.i18n131TasksReasoningEffort;

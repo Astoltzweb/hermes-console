@@ -13,6 +13,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 
 import 'stt_engine.dart';
+import 'wav_chunks.dart';
 
 /// Captura principal del Modo Voz en Android.
 ///
@@ -87,16 +88,26 @@ class HermesServerSttRuntime implements WhisperSttRuntime {
   }) async {
     final file = File(audioPath);
     if (!file.existsSync()) return '';
-    final bytes = await file.readAsBytes();
-    if (bytes.isEmpty) return '';
-    final response = await transcribeRequest(
-      'data:audio/wav;base64,${base64Encode(bytes)}',
-      'audio/wav',
-    );
-    if (response['ok'] != true) {
-      throw Exception('Server transcription failed.');
+    final transcripts = <String>[];
+    try {
+      await for (final bytes in transcriptionWavChunks(file)) {
+        final response = await transcribeRequest(
+          'data:audio/wav;base64,${base64Encode(bytes)}',
+          'audio/wav',
+        );
+        if (response['ok'] != true) {
+          throw Exception('Server transcription failed.');
+        }
+        final text = (response['transcript'] ?? '').toString().trim();
+        if (text.isNotEmpty) transcripts.add(text);
+      }
+    } catch (_) {
+      if (transcripts.isNotEmpty) {
+        throw PartialTranscriptionException(transcripts.join(' '));
+      }
+      rethrow;
     }
-    return (response['transcript'] ?? '').toString().trim();
+    return transcripts.join(' ');
   }
 
   @override

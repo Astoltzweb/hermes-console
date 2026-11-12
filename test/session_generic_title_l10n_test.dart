@@ -49,6 +49,26 @@ void main() {
     expect(localizedSessionTitle(en, named), 'Weekly report');
   });
 
+  test(
+    'Russian bot chat display preserves the canonical title and custom names',
+    () {
+      final ru = lookupStrings(const Locale('ru'));
+      final botChat = Session.fromJson({
+        'id': 'canonical',
+        'title': 'Bot Chat',
+        'source': 'bot-mode-canonical',
+      });
+      expect(localizedSessionTitle(ru, botChat), 'Чат с ботом');
+      expect(botChat.title, 'Bot Chat');
+      final named = Session.fromJson({
+        'id': 'custom',
+        'title': 'relationships',
+        'source': 'chat',
+      });
+      expect(localizedSessionTitle(ru, named), 'relationships');
+    },
+  );
+
   Future<void> openCronDialog(WidgetTester tester, Locale locale) async {
     await tester.pumpWidget(
       MaterialApp(

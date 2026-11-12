@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../models/kanban.dart';
+import '../utils/enum_labels.dart';
 import '../design/hermes_design.dart';
 import '../theme/app_theme.dart';
 
@@ -661,7 +662,8 @@ class _KanbanTaskDetailSurfaceState extends State<KanbanTaskDetailSurface> {
         for (final run in runs)
           _SubRow(
             key: ValueKey('kanban-run-${run.id}'),
-            title: '${copy.run} #${run.id} · ${run.status}',
+            title:
+                '${copy.run} #${run.id} · ${kanbanRunStatusLabel(Strings.of(context), run.status)}',
             subtitle: run.summary,
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
@@ -977,12 +979,12 @@ class _KanbanDetailCopy {
 
   const _KanbanDetailCopy._(this._strings);
 
-  factory _KanbanDetailCopy.forLocale(String localeName) =>
-      _KanbanDetailCopy._(lookupStrings(Locale(resolveNotificationLang(localeName))));
+  factory _KanbanDetailCopy.forLocale(String localeName) => _KanbanDetailCopy._(
+    lookupStrings(Locale(resolveNotificationLang(localeName))),
+  );
 
   String get readOnly => _strings.i18n131DetailReadOnly;
-  String get objective =>
-      _strings.i18n131DetailObjective;
+  String get objective => _strings.i18n131DetailObjective;
   String get result => _strings.i18n131DetailResult;
   String get latestSummary => _strings.i18n131DetailLatestSummary;
   String get diagnostics => _strings.i18n131DetailDiagnostics;
@@ -993,19 +995,16 @@ class _KanbanDetailCopy {
   String get blocks => _strings.i18n131DetailBlocks;
   String get childResults => _strings.i18n131DetailChildResults;
   String get comments => _strings.i18n131DetailComments;
-  String get noComments =>
-      _strings.i18n131DetailNoComments;
+  String get noComments => _strings.i18n131DetailNoComments;
   String get someone => _strings.i18n131DetailSomeone;
-  String get addComment =>
-      _strings.i18n131DetailAddComment;
+  String get addComment => _strings.i18n131DetailAddComment;
   String get messageWorker => _strings.i18n131DetailMessageWorker;
   String get send => _strings.i18n131DetailSend;
   String get attachments => _strings.i18n131DetailAttachments;
   String get noAttachments => _strings.i18n131DetailNoAttachments;
   String get uploadAttachment => _strings.i18n131DetailUploadAttachment;
   String get download => _strings.i18n131DetailDownload;
-  String get deleteAttachment =>
-      _strings.i18n131DetailDeleteAttachment;
+  String get deleteAttachment => _strings.i18n131DetailDeleteAttachment;
   String get runs => _strings.i18n131DetailRuns;
   String get run => _strings.i18n131DetailRun;
   String get inspect => _strings.i18n131DetailInspect;
@@ -1016,8 +1015,7 @@ class _KanbanDetailCopy {
   String get showLess => _strings.i18n131DetailShowLess;
   String get operations => _strings.i18n131DetailOperations;
   String get model => _strings.i18n131DetailModel;
-  String get inheritModel =>
-      _strings.i18n131DetailInheritModel;
+  String get inheritModel => _strings.i18n131DetailInheritModel;
   String get reassign => _strings.i18n131DetailReassign;
   String get reclaim => _strings.i18n131DetailReclaim;
   String get specify => _strings.i18n131DetailSpecify;

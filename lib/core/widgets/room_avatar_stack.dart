@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
+import '../utils/enum_labels.dart';
 import '../models/agent_profile.dart';
 import '../models/bot_mode_v13.dart';
 import '../theme/app_theme.dart';
@@ -155,7 +156,7 @@ class RoomAvatarStack extends StatelessWidget {
     final visibleOwners = owners.take(3).toList(growable: false);
     final overflow = owners.length - visibleOwners.length;
     final colors = Theme.of(context).hermes;
-    final label = Strings.of(context).roomAvatarMembers(owners.length);
+    final label = roomMemberCountLabel(Strings.of(context), owners.length);
     return Semantics(
       key: const ValueKey('room-avatar-stack'),
       image: true,
@@ -237,10 +238,7 @@ class RoomAvatarStack extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: colors.surfaceVariant,
                           shape: BoxShape.circle,
-                          border: Border.all(
-                            color: colors.surface,
-                            width: 1.5,
-                          ),
+                          border: Border.all(color: colors.surface, width: 1.5),
                         ),
                         child: SizedBox.square(
                           dimension: 22,
